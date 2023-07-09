@@ -6,17 +6,20 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import Icon from "react-native-vector-icons/Ionicons";
 import * as Location from "expo-location";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CreateIssueFormModal from "../modal/CreateIssue";
+import { listIssuesByCoordinate } from "../services/issueServices";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const MapScreen = ({ navigation }) => {
   const insets = useSafeAreaInsets();
 
   const [currentLocation, setCurrentLocation] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [issueMarkers, setIssueMarkers] = useState([]);
 
   const [dropPin, setDroppedPin] = useState(null);
   // console.log("dropPin", dropPin);
@@ -52,12 +55,17 @@ const MapScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(async () => {
-    const res = await fetch(
-      `http://192.168.32.1:8080/v1/issue/list-by-location?latitude=${currentLocation.latitude}&longitude=${currentLocation.longitude}`
-    );
-    const data = await res.json();
-    console.log(data)
+  useEffect(() => {
+    (async function () {
+      if (currentLocation) {
+        listIssuesByCoordinate(
+          currentLocation.latitude,
+          currentLocation.longitude
+        ).then((issuesMarkerData) => {
+          setIssueMarkers(issuesMarkerData);
+        });
+      }
+    })();
   }, [currentLocation]);
 
   const mapRef = React.useRef(null);
@@ -65,11 +73,14 @@ const MapScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ paddingTop: insets.top }}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity
-          style={styles.backIconContainer}
-          onPress={() => navigation.openDrawer("DrawerScreen")}
-        >
-          <Icon name="menu-outline" style={styles.backIcon} />
+        <TouchableOpacity style={styles.backIconContainer}>
+          <Icon
+            name="menu-outline"
+            style={styles.backIcon}
+            onPress={() => {
+              navigation.openDrawer();
+            }}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -95,7 +106,24 @@ const MapScreen = ({ navigation }) => {
           setIsModalVisible(true);
         }}
         showsMyLocationButton={false}
-      ></MapView>
+      >
+        {issueMarkers.map((marker, index) => {
+          const coords = {
+            longitude: marker.location.coordinates[0],
+            latitude: marker.location.coordinates[1],
+          };
+          return (
+            <Marker
+              key={index}
+              coordinate={coords}
+              title={marker.name}
+              description={marker.description}
+            >
+              <MaterialIcons name="emoji-flags" size={50} color="red" />
+            </Marker>
+          );
+        })}
+      </MapView>
       <View style={styles.iconBottomContainer}>
         <TouchableOpacity
           style={styles.currentLocationIconContainer}

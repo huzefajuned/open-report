@@ -3,14 +3,15 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import MapScreen from "../screens/MapScreen";
+import Menus from "../screens/Menus";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerStack = () => {
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="HomeScreen" component={LoginScreen} />
-      <Drawer.Screen name="Term&Condition" component={RegisterScreen} />
+      <Drawer.Screen name="Menus" component={Menus} />
     </Drawer.Navigator>
   );
 };

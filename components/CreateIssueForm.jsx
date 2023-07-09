@@ -1,16 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, Text, View, Button, Image } from "react-native";
 import InputField from "../components/InputField";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import CustomButton from "../components/CustomButton";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import SelectDropDown from "./SelectDropDown";
-import SelectImage from "./SelectImage";
+// import SelectImage from "./SelectImage";
 import { api_key, reverseGeoCodeAPI } from "../services/url";
+import * as ImagePicker from "expo-image-picker";
 
 const CreateIssueForm = ({ navigation, dropPin }) => {
   const insets = useSafeAreaInsets();
   const [selectedLocation, setSelectedLocation] = useState();
+
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      allowsEditing: true,    
+    });
+    console.log(result)
+    if (!result.canceled) {
+      setImage(result.uri);
+    }
+  };
 
   const getReverseGeoCode = async () => {
     return;
@@ -94,7 +110,10 @@ const CreateIssueForm = ({ navigation, dropPin }) => {
         )}
 
         <SelectDropDown />
-        {/* <SelectImage /> */}
+        {image && (
+          <Image source={{ uri: image }} style={{ flex: 1, width: 600 }} />
+        )}
+        <Button title="Pick Image" onPress={pickImage} />
         <CustomButton label={"Create Issue Now"} onPress={() => {}} />
       </ScrollView>
     </SafeAreaView>
