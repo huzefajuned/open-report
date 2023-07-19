@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "./navigations/AuthStack";
 
 function App() {
+  
   return (
     <NavigationContainer>
       <AuthStack />

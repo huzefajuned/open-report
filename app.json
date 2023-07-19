@@ -21,13 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.huzefajuned.openreport"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins":[
-      
-    ]
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "44b8e662-ff49-4a76-a967-1493804057c8"
+      }
+    }
   }
 }

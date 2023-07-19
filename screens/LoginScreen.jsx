@@ -18,6 +18,7 @@ import InputField from "../components/InputField";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const LoginScreen = ({ navigation }) => {
+  
   const insets = useSafeAreaInsets();
 
   return (

@@ -5,9 +5,11 @@ import {
   Dimensions,
   TouchableOpacity,
   View,
+  Text,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Icon from "react-native-vector-icons/Ionicons";
+import EvilIcons from "react-native-vector-icons/EvilIcons";
 import * as Location from "expo-location";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CreateIssueFormModal from "../modal/CreateIssue";
@@ -54,6 +56,9 @@ const MapScreen = ({ navigation }) => {
       });
     }
   };
+  const toggleProfileScreen = () => {
+    navigation.navigate("ProfileScreen");
+  };
 
   useEffect(() => {
     (async function () {
@@ -74,21 +79,17 @@ const MapScreen = ({ navigation }) => {
     <SafeAreaView style={{ paddingTop: insets.top }}>
       <View style={styles.iconContainer}>
         <TouchableOpacity style={styles.backIconContainer}>
-          <Icon
-            name="menu-outline"
-            style={styles.backIcon}
-            onPress={() => {
-              navigation.openDrawer();
-            }}
-          />
+          <Text style={{ fontSize: 20 }}>Open Report</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.avatarIconContainer}
-          onPress={() => navigation.navigate("ProfileScreen")}
-        >
-          <Icon name="person" style={styles.avatarIcon} />
-        </TouchableOpacity>
+        <View style={styles.avatarIconContainer}>
+          <TouchableOpacity>
+            <EvilIcons
+              name="user"
+              style={styles.avatarIcon}
+              onPress={toggleProfileScreen}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       <MapView
         shows
@@ -96,8 +97,8 @@ const MapScreen = ({ navigation }) => {
         style={styles.map}
         showsUserLocation={true}
         initialRegion={{
-          latitude: currentLocation?.latitude,
-          longitude: currentLocation?.longitude,
+          latitude: currentLocation?.latitude || 22.5754,
+          longitude: currentLocation?.longitude || 88.4798,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -119,7 +120,7 @@ const MapScreen = ({ navigation }) => {
               title={marker.name}
               description={marker.description}
             >
-              <MaterialIcons name="emoji-flags" size={50} color="red" />
+              <MaterialIcons name="warning" size={20} color="red" />
             </Marker>
           );
         })}
@@ -151,6 +152,7 @@ const styles = StyleSheet.create({
 
   iconContainer: {
     position: "absolute",
+    top: 50,
     zIndex: 1,
     width: "100%",
     display: "flex",
@@ -161,13 +163,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 1,
     width: "100%",
-    bottom: 0,
+    bottom: 50,
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-end",
   },
   backIconContainer: {
-    top: 50,
     left: 20,
   },
   backIcon: {
@@ -177,16 +178,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 8,
   },
-  avatarIconContainer: { top: 50, right: 20 },
+  avatarIconContainer: {
+    right: 20,
+    padding: 5,
+  },
   avatarIcon: {
-    fontSize: 25,
+    fontSize: 30,
     color: "white",
     backgroundColor: "lightgray",
     borderRadius: 50,
-    padding: 8,
+    padding: 10,
   },
   currentLocationIconContainer: {
-    bottom: 20,
     right: 20,
   },
   currentLocationIcon: {

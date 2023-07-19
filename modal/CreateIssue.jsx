@@ -35,7 +35,7 @@ const CreateIssue = ({ isModalVisible, setIsModalVisible,dropPin }) => {
           </Text>
         </TouchableOpacity>
 
-        <CreateIssueForm  dropPin={dropPin}/>
+        <CreateIssueForm setIsModalVisible={setIsModalVisible}  dropPin={dropPin} />
       </Modal>
     </View>
   );
